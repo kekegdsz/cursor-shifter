@@ -1,5 +1,7 @@
 # Cursor-Shifter（Cursor 一键续杯换号助手）
 
+- Cursor&Windsurf Shifter, Cursor&Windsurf Pro 账号切换助手
+
 <div align="center">
 
 ![Logo](img/logo_cursor_96.png)
@@ -10,9 +12,9 @@
 [![Version](https://img.shields.io/badge/version-0.1.0-brightgreen.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Sxuan-Coder/cursor-shifter)
 
-轻松一键续杯 Cursor Pro，支持使用 20 美元 Pro 会员账号 和 10 美元试用会员账号
+轻松一键续杯 Cursor&Windsurf Pro，支持使用 Pro、Ultra、Pro+账号
 
-**支持 Claude 4.5 及 MAX、GPT 5 等会员模型**
+**支持 Claude 4.5 及 MAX、GPT 5.1、Gemini 3 Pro 等会员模型**
 
 [GitHub 仓库](https://github.com/Sxuan-Coder/cursor-shifter) | [问题反馈](https://github.com/Sxuan-Coder/cursor-shifter/issues) | [下载软件](https://github.com/Sxuan-Coder/cursor-shifter/releases)
 
@@ -165,18 +167,13 @@
 
 ## 🔄 更新日志
 
-### v0.1.0 (2025-10-14)
+### v0.5.0 (2025-11-20)
 
-**🎉 首个正式版本**
+**🎉 首个支持 Windsurf Pro 的版本**
 
 **新增功能**:
 
-- ✅ 完整的账号管理系统
-- ✅ 一键换号功能
-- ✅ 配置备份与恢复
-- ✅ SessionToken 解析
-- ✅ 实用工具集合
-- ✅ 自动换号功能
+- ✅ 支持 Cursor&Windsurf Pro 账号切换
 
 ---
 
