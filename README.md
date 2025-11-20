@@ -4,13 +4,16 @@
 
 <div align="center">
 
-![Logo](img/logo_cursor_96.png)
+<p align="center">
+  <img src="img/logo_cursor_96.png" alt="logo" width="96" height="96">
+</p>
 
-**Cursor 一键续杯换号助手**
+**Cursor&Windsurf 一键续杯换号助手**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-brightgreen.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
-[![Platform](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://github.com/Sxuan-Coder/cursor-shifter)
+[![Version](https://img.shields.io/badge/version-0.3.2-brightgreen.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows|Mac-red.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
+[![使用教程必看](https://img.shields.io/badge/必看使用教程-black.svg)](https://docs.qq.com/aio/DT0p2dU9jb3NUSnhH)
 
 轻松一键续杯 Cursor&Windsurf Pro，支持使用 Pro、Ultra、Pro+账号
 
@@ -75,7 +78,9 @@
 
 ## 软件图片
 
-![img](img/测试1.png)
+<div style="width:300px; height:400px; text-align:center;">
+  <img src="img/测试1.png" alt="测试图片" style="width:70%; height:70%;">
+</div>
 
 ---
 
@@ -86,41 +91,13 @@
 1. 访问 [Releases 页面](https://github.com/Sxuan-Coder/cursor-shifter/releases)
 2. 下载最新版本的安装包
    - Windows: `Cursor-Shifter-x.x.x-setup.exe`
+   - Mac: `Cursor-Shifter-x.x.x.dmg`
 3. 运行安装程序
 4. 启动应用
 
 ## 🎮 使用指南
 
-### 基础使用
-
-#### 1. 手动换号
-
-1. 打开软件，进入"仪表盘"
-2. 点击"输入 Token 一键换号"
-3. 输入您的 AccessToken
-4. 等待换号完成
-
-#### 2. 通过 SessionToken 添加账号
-
-1. 点击导航菜单"获取令牌"
-2. 点击"打开登录页"
-3. 登录您的账号
-4. 按 F12 打开开发者工具
-5. 找到 Cookie
-6. 复制并粘贴到输入框
-7. 点击"解析并添加账号"
-
-#### 3. 账号管理
-
-1. 进入"账号管理"页面
-2. 查看所有已保存的账号
-3. 点击"一键换号"快速切换
-4. 使用"导出账号数组"备份账号数据
-
-#### 4. 自动换号
-
-1. 点击"自动一键换号"
-2. 自动执行换号
+[【使用前必看】软件使用教程文档](https://docs.qq.com/aio/DT0p2dU9jb3NUSnhH)
 
 ---
 
@@ -161,7 +138,9 @@
 
 ## QQ 反馈群
 
-![QQ](img/QQqun.jpg)
+<div style="width:300px; height:400px; text-align:center;">
+  <img src="img/QQqun.jpg" alt="qq群图片" style="width:30%; height:30%;">
+</div>
 
 ---
 
