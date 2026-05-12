@@ -1,0 +1,87 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "cursor-shifter",
+  "version": "0.5.1",
+  "identifier": "top.sxuan.cursor-shifter",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Cursor and Windsurf Shifter",
+        "width": 900,
+        "height": 720,
+        "resizable": true,
+        "center": true,
+        "minWidth": 800,
+        "minHeight": 600,
+        "devtools": true
+      }
+    ],
+    "security": {
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "main-capability",
+          "description": "Main application capabilities",
+          "windows": [
+            "*"
+          ],
+          "permissions": [
+            "core:window:allow-set-size",
+            "core:window:allow-set-min-size",
+            "core:window:allow-set-max-size",
+            "core:window:allow-set-position",
+            "core:window:allow-set-resizable",
+            "core:window:allow-center",
+            "core:window:default"
+          ]
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "publisher": "SXuan",
+    "homepage": "https://github.com/yourusername/cursor-shifter",
+    "shortDescription": "Cursor and Windsurf 账号快速切换工具",
+    "longDescription": "一个方便的 Cursor and Windsurf 编辑器账号管理和快速切换工具,支持多账号管理、一键备份恢复等功能。",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "wix": {
+        "language": "zh-CN",
+        "template": null,
+        "fragmentPaths": [],
+        "componentRefs": [],
+        "featureGroupRefs": [],
+        "featureRefs": [],
+        "mergeRefs": []
+      },
+      "nsis": {
+        "template": null,
+        "languages": [
+          "SimpChinese"
+        ],
+        "displayLanguageSelector": false,
+        "installerIcon": null,
+        "installMode": "currentUser",
+        "headerImage": null,
+        "sidebarImage": null,
+        "installerHooks": null,
+        "compression": "lzma"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Cursor-Shifter（Cursor 一键续杯换号助手）
 
-- Cursor&Windsurf Shifter, Cursor&Windsurf Pro 账号切换助手
+- Cursor&Windsurf Shifter账号切换助手
 
 <div align="center">
 
@@ -11,13 +11,11 @@
 **Cursor&Windsurf 一键续杯换号助手**
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.2-brightgreen.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
+[![Version](https://img.shields.io/badge/version-0.5.1-brightgreen.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows|Mac-red.svg)](https://github.com/Sxuan-Coder/cursor-shifter/releases)
 [![使用教程必看](https://img.shields.io/badge/必看使用教程-black.svg)](https://docs.qq.com/aio/DT0p2dU9jb3NUSnhH)
 
-轻松一键续杯 Cursor&Windsurf Pro，支持使用 Pro、Ultra、Pro+账号
-
-**支持 Claude 4.5 及 MAX、GPT 5.1、Gemini 3 Pro 等会员模型**
+针对cursor和windsurf一键换号
 
 [GitHub 仓库](https://github.com/Sxuan-Coder/cursor-shifter) | [问题反馈](https://github.com/Sxuan-Coder/cursor-shifter/issues) | [下载软件](https://github.com/Sxuan-Coder/cursor-shifter/releases)
 
@@ -28,7 +26,6 @@
 ### 🎯 核心功能
 
 - **📊 仪表盘**
-
   - 实时显示当前 Cursor 账号信息
   - 智能识别账号类型
   - 动态显示试用期/使用期剩余天数
@@ -36,33 +33,28 @@
   - 邮箱隐私保护
 
 - **🔄 账号管理**
-
   - 一键换号（手动输入 Token）
   - 自动换号（自动获取 Token）
   - 账号列表管理（添加/删除/切换）
   - 批量导入/导出账号（支持 JSON 格式）
 
 - **🎫 获取令牌**
-
   - 智能提取 AccessToken
   - 自动保存到账号列表
 
 - **💾 配置备份**
-
   - 一键备份当前 Cursor 配置
   - 支持创建/恢复/删除备份
   - 换号前自动备份
   - 备份文件信息展示
 
 - **🔧 实用工具**
-
   - 禁用 HTTP/2 协议
   - 设置代理端口（支持自定义端口）
 
 ### 🎨 界面特性
 
 - **现代化 UI 设计**
-
   - 深色主题，护眼舒适
   - 响应式布局，适配多种屏幕尺寸
   - 流畅的动画效果

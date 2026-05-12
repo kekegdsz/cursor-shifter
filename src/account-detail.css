@@ -1,0 +1,193 @@
+/* 账号详情弹窗样式 */
+.detail-dialog-container {
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.dialog-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #2d7ccb 0%, #1f69d8 100%);
+  color: white;
+  margin-right: 12px;
+}
+
+.detail-dialog-body {
+  padding: 0;
+}
+
+.detail-section {
+  padding: 20px;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.1);
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5b8ef4;
+}
+
+.detail-section-header svg {
+  flex-shrink: 0;
+}
+
+.detail-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-item-row {
+  display: grid;
+  grid-template-columns: 24px 120px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.detail-item-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.detail-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.detail-item-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.detail-item-value {
+  font-size: 14px;
+  color: #e5e7eb;
+  word-break: break-all;
+}
+
+.detail-item-value.monospace {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 13px;
+  color: #d1d5db;
+}
+
+.detail-api-key {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+}
+
+.detail-api-key code {
+  flex: 1;
+  font-size: 13px;
+  color: #d1d5db;
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+.copy-api-key-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-api-key-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  transform: translateY(-1px);
+}
+
+.copy-api-key-btn:active {
+  transform: translateY(0);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .detail-dialog-container {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  .detail-item-row {
+    grid-template-columns: 20px 100px 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .detail-item-label {
+    font-size: 12px;
+  }
+
+  .detail-item-value {
+    font-size: 13px;
+  }
+
+  .detail-api-key {
+    padding: 12px;
+  }
+
+  .detail-api-key code {
+    font-size: 12px;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .detail-item-row {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .detail-item-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .detail-item-value {
+    color: #e5e7eb;
+  }
+
+  .detail-item-value.monospace {
+    color: #d1d5db;
+  }
+
+  .detail-api-key {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .detail-api-key code {
+    color: #d1d5db;
+  }
+}

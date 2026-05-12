@@ -1,0 +1,1364 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="windsurf.css" />
+  <link rel="stylesheet" href="account-detail.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Windsurf Shifter</title>
+  <script src="/config.js"></script>
+  <script type="module" src="/common.js" defer></script>
+  <script type="module" src="/windsurf.js" defer></script>
+</head>
+
+<body>
+  <!-- 左侧导航栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button class="menu-toggle" id="menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+      <h2 class="sidebar-title">导航菜单</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#dashboard" class="nav-item active" data-page="dashboard">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+        </svg>
+        <span class="nav-text">仪表盘</span>
+      </a>
+
+      <a href="#accounts" class="nav-item" data-page="accounts">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span class="nav-text">账号管理</span>
+      </a>
+
+      <a href="#switch" class="nav-item" data-page="switch" style="display: none;">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <polyline points="17 1 21 5 17 9" />
+          <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+          <polyline points="7 23 3 19 7 15" />
+          <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+        </svg>
+        <span class="nav-text">获取令牌</span>
+      </a>
+
+      <a href="#backup" class="nav-item" data-page="backup" style="display: none;">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        <span class="nav-text">配置备份</span>
+      </a>
+
+      <a href="#tools" class="nav-item" data-page="tools" style="display: none;">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path
+            d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+        </svg>
+        <span class="nav-text">实用工具</span>
+      </a>
+
+      <a href="#about" class="nav-item" data-page="about">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
+        </svg>
+        <span class="nav-text">关于</span>
+      </a>
+
+      <a href="#tutorial" class="nav-item" data-page="tutorial">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </svg>
+        <span class="nav-text">使用教程</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="app-container">
+    <!-- 仪表盘页面 -->
+    <div id="page-dashboard" class="page-content active">
+      <!-- 使用情况卡片 -->
+      <div class="usage-card">
+        <!-- 顶部标题和刷新按钮 -->
+        <div class="card-header">
+          <h1 class="card-title">当前账号</h1>
+          <div class="header-controls">
+            <!-- AI IDE 切换开关 -->
+            <div class="ide-switch-container">
+              <span class="ide-switch-label">当前选中的AI编辑器</span>
+              <button class="ide-switch-btn" id="ide-switch-btn">
+                <span class="ide-option" data-ide="cursor">Cursor</span>
+                <span class="ide-option" data-ide="windsurf">Windsurf</span>
+                <span class="ide-switch-slider"></span>
+              </button>
+            </div>
+            <button class="refresh-btn" id="refresh-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 试用期状态 -->
+        <div class="status-section">
+          <span class="status-badge expired">(-)</span>
+          <span class="status-label trial">试用期</span>
+        </div>
+
+        <div class="trial-progress">
+          <div class="progress-label">试用期</div>
+          <div class="progress-bar">
+            <div class="progress-fill expired-fill"></div>
+          </div>
+        </div>
+
+        <!-- 用量统计 -->
+        <div class="usage-statistics" id="usage-statistics" style="display: none;">
+          <div class="usage-label" id="usage-label">用量统计：0$ / 0$</div>
+          <div class="progress-bar">
+            <div class="progress-fill usage-fill" id="usage-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- 账号信息部分 -->
+        <div class="account-info-section">
+
+          <!-- 第一行：邮箱和套餐 -->
+          <div class="info-row">
+            <!-- 邮箱 -->
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m2 7 10 7 10-7" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <div class="info-label">邮箱</div>
+                <div class="info-value" id="account-email">Unknown Email</div>
+              </div>
+            </div>
+
+            <!-- 套餐 -->
+            <div class="info-item">
+              <div class="info-icon crown">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <div class="info-label">套餐</div>
+                <div class="info-value">
+                  <span class="badge-pro">Pro</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 第二行：状态和Machine GUID -->
+          <div class="info-row">
+            <!-- 状态 -->
+            <div class="info-item">
+              <div class="info-icon verified">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <div class="info-label">状态</div>
+                <div class="info-value">
+                  <span class="status-verified">✓ 已认证</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Machine GUID -->
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="9" y1="9" x2="15" y2="15" />
+                  <line x1="15" y1="9" x2="9" y2="15" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <div class="info-label">
+                  Machine GUID
+                  <button class="copy-btn-small" id="copy-machine-guid-btn" title="复制 Machine GUID">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="info-value monospace small" id="machine-guid" title="Windows 注册表 MachineGuid">读取中...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快捷操作卡片 -->
+      <div class="actions-card">
+        <h2 class="actions-title">快捷操作</h2>
+        <div class="actions-buttons actions-grid-2">
+          <button class="action-btn primary" id="switch-account-btn" style="display: none;">
+            输入Token一键换号
+          </button>
+          <button class="action-btn primary" id="buy-account-btn">
+            购买账号卡密
+          </button>
+          <button class="action-btn primary" id="reset-device-btn">
+            重置Windsurf机器码
+          </button>
+          <button class="action-btn primary" id="unlimited-quota-btn" style="display: none;">
+            自动一键换号
+          </button>
+        </div>
+      </div>
+
+      <!-- Windsurf 路径设置卡片 -->
+      <div class="windsurf-path-card">
+        <h2 class="actions-title">Windsurf 安装路径</h2>
+        <div class="windsurf-path-setting">
+          <div class="path-input-group">
+            <input type="text" class="path-input" id="windsurf-path-display" placeholder="正在检测 Windsurf 安装路径..."
+              readonly disabled />
+            <button class="action-btn primary" id="select-windsurf-path-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+              设置 Windsurf 安装路径
+            </button>
+          </div>
+          <div class="path-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>如果 Windsurf 安装在非默认位置（如 D 盘），请手动指定路径以确保换号功能正常工作</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 账号管理页面 -->
+    <div id="page-accounts" class="page-content">
+      <div class="accounts-header">
+        <h1 class="page-title">账号管理</h1>
+        <div class="accounts-actions">
+          <button class="action-btn primary" id="add-account-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+            新增账号
+          </button>
+          <button class="action-btn primary" id="export-all-accounts-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            导出账号
+          </button>
+          <button class="action-btn primary" id="import-account-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            导入账号
+          </button>
+          <button class="refresh-btn" id="refresh-accounts-btn" title="刷新列表">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+            </svg>
+          </button>
+          <button class="action-btn secondary" id="fetch-all-tokens-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            一键获取Token
+          </button>
+        </div>
+      </div>
+
+      <!-- 当前账号信息卡片 -->
+      <!-- <div class="current-account-card">
+        <h2 class="section-title">当前账号</h2>
+        <div id="current-account-info" class="account-info-display">
+          <div class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <p>暂无账号数据</p>
+            <p class="empty-hint">请先使用"一键换号"功能或点击"导入账号文件"</p>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- 统计卡片 -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-number" id="total-accounts">0</div>
+          <div class="stat-label">总账号数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="available-accounts" style="color: #10b981;">0</div>
+          <div class="stat-label">可用账号</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="expiring-accounts" style="color: #f59e0b;">0</div>
+          <div class="stat-label">即将到期</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="expired-accounts" style="color: #ef4444;">0</div>
+          <div class="stat-label">已到期</div>
+        </div>
+      </div>
+
+      <!-- 账号列表表格 -->
+      <div class="accounts-list-card">
+        <h2 class="section-title">账号列表</h2>
+        <div class="accounts-table-container">
+          <table class="accounts-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>邮箱</th>
+                <th>密码</th>
+                <th>类型</th>
+                <th>积分</th>
+                <th>使用率</th>
+                <th>到期时间</th>
+                <th>TOKEN</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="accounts-table-body">
+              <!-- 账号列表将在这里动态生成 -->
+              <tr class="empty-row">
+                <td colspan="9">
+                  <div class="empty-state-small">
+                    <p>暂无账号</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 账号详情卡片（隐藏的文件输入） -->
+      <input type="file" id="account-file-input" accept=".json" style="display: none;" />
+
+      <!-- 账号数据详情（保留，用于显示详细信息） -->
+      <div class="account-details-card" id="account-details-card" style="display: none;">
+        <h2 class="section-title">账号详细信息</h2>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">邮箱</span>
+            <span class="detail-value" id="detail-email">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">套餐类型</span>
+            <span class="detail-value" id="detail-plan">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">注册方式</span>
+            <span class="detail-value" id="detail-signup">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Machine ID</span>
+            <span class="detail-value monospace" id="detail-machine-id">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Device ID</span>
+            <span class="detail-value monospace" id="detail-device-id">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">备注</span>
+            <span class="detail-value" id="detail-note">-</span>
+          </div>
+        </div>
+
+        <!-- Token 显示区域 -->
+        <div class="token-section">
+          <div class="token-header">
+            <h3 class="token-title">Access Token</h3>
+            <button class="copy-btn" id="copy-token-btn" title="复制 Token">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+            </button>
+          </div>
+          <div class="token-display" id="token-display">
+            <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="account-actions">
+          <button class="action-btn secondary" id="export-account-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            导出账号数据
+          </button>
+          <button class="action-btn danger" id="delete-account-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            删除账号数据
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 激活查看页面 -->
+    <div id="page-open-source-notice" class="page-content">
+      <div class="activation-container">
+        <h1 class="page-title">激活查看</h1>
+
+        <!-- 激活信息卡片 -->
+        <div class="activation-info-card">
+          <div class="activation-header">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <h2 class="activation-title">自动换号激活状态</h2>
+          </div>
+
+          <!-- 激活状态 -->
+          <div class="activation-status-section">
+            <div class="status-row">
+              <span class="status-label">激活状态</span>
+              <span class="status-value" id="activation-status">
+                <span class="badge badge-success">已激活</span>
+              </span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">激活时间</span>
+              <span class="status-value" id="activation-date">2024-01-15 10:30:00</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">过期时间</span>
+              <span class="status-value" id="expiration-date">2025-01-15 10:30:00</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">剩余天数</span>
+              <span class="status-value" id="remaining-days">
+                <span class="days-count">365</span> 天
+              </span>
+            </div>
+            <!-- <div class="status-row">
+              <span class="status-label">今日换号次数</span>
+              <span class="status-value" id="switch-count">0 次</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">最后换号时间</span>
+              <span class="status-value" id="last-switch-time">-</span>
+            </div>
+            <div class="status-row">
+              <span class="status-label">下次可换号时间</span>
+              <span class="status-value" id="next-switch-time">-</span>
+            </div> -->
+          </div>
+
+          <!-- 进度条 -->
+          <div class="activation-progress-section">
+            <div class="progress-header">
+              <span class="progress-label">使用进度</span>
+              <span class="progress-percentage" id="usage-percentage">0%</span>
+            </div>
+            <div class="progress-bar-wrapper">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="activation-progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="progress-info">
+              <span class="progress-text" id="progress-info-text">已使用 0 天，剩余 365 天</span>
+            </div>
+          </div>
+
+          <!-- 功能说明 -->
+          <div class="activation-features">
+            <h3 class="features-title">激活功能</h3>
+            <ul class="features-list">
+              <li class="feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>自动检测账号额度使用情况</span>
+              </li>
+              <li class="feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>智能判断最佳换号时机</span>
+              </li>
+              <li class="feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>一键自动切换账号</span>
+              </li>
+              <li class="feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>支持 Pro、Ultra 和Pro试用账号</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 操作按钮 -->
+          <div class="activation-actions">
+            <button class="action-btn primary" id="refresh-activation-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+              </svg>
+              刷新激活信息
+            </button>
+          </div>
+        </div>
+
+        <!-- 激活码输入卡片 -->
+        <div class="activation-code-card">
+          <h2 class="card-title">激活码激活</h2>
+          <p class="card-description">输入激活码来激活自动换号功能</p>
+
+          <div class="activation-code-input-group">
+            <label for="activation-code-input" class="input-label">激活码</label>
+            <input type="text" id="activation-code-input" class="tool-input" placeholder="请输入激活码" maxlength="100" />
+            <div class="activation-code-actions">
+              <button class="action-btn primary" id="activate-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                立即激活
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 提示信息 -->
+        <div class="activation-notice">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <p>激活功能用于自动管理账号切换，确保您的 Windsurf 使用体验持续流畅。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 获取令牌页面 -->
+    <div id="page-switch" class="page-content">
+      <div class="token-guide-container">
+        <h1 class="page-title">获取 Windsurf Token</h1>
+
+        <!-- 步骤指引 -->
+        <div class="guide-card">
+          <h2 class="guide-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            操作步骤
+          </h2>
+
+          <div class="steps-container">
+            <!-- 步骤1 -->
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3 class="step-title">点击按钮打开 Windsurf 登录页</h3>
+                <p class="step-description">点击下方按钮将在浏览器中打开 Windsurf 官方登录页面</p>
+                <button class="action-btn primary" id="open-windsurf-login-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  打开 Windsurf 登录页
+                </button>
+              </div>
+            </div>
+
+            <!-- 步骤2 -->
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3 class="step-title">登录你的 Windsurf 账号</h3>
+                <p class="step-description">在打开的页面中使用你的邮箱、Google 或 GitHub 账号登录</p>
+              </div>
+            </div>
+
+            <!-- 步骤3 -->
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3 class="step-title">获取 Token</h3>
+                <p class="step-description">登录成功后，按 <kbd>F12</kbd> 打开开发者工具</p>
+                <ul class="step-list">
+                  <li><strong>方式一：</strong>切换到"应用程序"（Application）或"存储"（Storage）标签</li>
+                  <li>展开左侧 <strong>Cookie</strong> → <code>https://windsurf.ai</code></li>
+                  <li>找到名为 <code>WindsurfSessionToken</code> 的 Cookie，复制其值</li>
+                  <li><strong>方式二：</strong>在控制台(Console)中输入 <code>document.cookie</code></li>
+                  <li>找到包含 <code>user_</code> 开头的 Token，复制整个值</li>
+                </ul>
+                <div class="tip-box">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                  <span>提示：Token 通常很长，确保完整复制。如果无法找到 Cookie，可以在控制台输入 document.cookie 查看所有 Cookie</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 步骤4 -->
+            <div class="step-item">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3 class="step-title">粘贴 Token 并添加账号</h3>
+                <p class="step-description">将复制的 Token 粘贴到下方输入框中</p>
+                <div class="token-input-group">
+                  <textarea id="session-token-input" class="token-textarea"
+                    placeholder="粘贴 Token 的值...&#10;&#10;支持两种格式：&#10;1. WebToken: user_xxx%3A%3AeyJhbGciOiJI...（推荐）&#10;2. SessionToken: user_xxx%3Asess_xxx%7Ceyc0ZS1k...&#10;&#10;两种格式都可以自动识别"
+                    rows="6"></textarea>
+                  <button class="action-btn primary" id="parse-session-token-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    解析并导入账号
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 结果显示区域 -->
+        <div class="result-card" id="token-result-card" style="display: none;">
+          <h2 class="result-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            解析结果
+          </h2>
+          <div id="token-result-content"></div>
+        </div>
+
+        <!-- 视频教程（可选） -->
+        <div class="video-guide-card">
+          <h2 class="guide-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            视频教程
+          </h2>
+          <p class="guide-description">
+            如果你不熟悉如何获取 Cookie，可以参考视频教程（开发中...）
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 配置备份页面 -->
+    <div id="page-backup" class="page-content">
+      <div class="backup-header">
+        <h1 class="page-title">配置备份</h1>
+        <div class="backup-actions">
+          <button class="action-btn primary" id="create-backup-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            备份当前配置
+          </button>
+          <button class="refresh-btn" id="refresh-backups-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 备份列表卡片 -->
+      <div class="backup-list-card">
+        <h2 class="section-title">备份列表</h2>
+        <div class="backup-table-container">
+          <table class="backup-table">
+            <thead>
+              <tr>
+                <th class="col-backup-name">备份名称</th>
+                <th class="col-backup-files">配置项</th>
+                <th class="col-backup-time">创建时间</th>
+                <th class="col-backup-actions">操作</th>
+              </tr>
+            </thead>
+            <tbody id="backup-list">
+              <!-- 备份列表将在这里动态生成 -->
+              <tr class="empty-row">
+                <td colspan="4">
+                  <div class="empty-state-small">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="1.5">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <p>暂无备份记录</p>
+                    <p class="empty-hint">点击"备份当前配置"创建第一个备份</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 实用工具页面 -->
+    <div id="page-tools" class="page-content">
+      <div class="tools-container">
+        <h1 class="page-title">实用工具</h1>
+
+        <!-- HTTP2 设置卡片 -->
+        <div class="tool-card">
+          <h2 class="tool-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            禁用 HTTP/2
+          </h2>
+          <p class="tool-description">
+            禁用 Windsurf 的 HTTP/2 协议可以解决某些网络环境下的连接问题。
+          </p>
+          <div class="tool-actions">
+            <button class="action-btn primary" id="disable-http2-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+              禁用 HTTP/2
+            </button>
+            <button class="action-btn secondary" id="enable-http2-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              恢复 HTTP/2
+            </button>
+          </div>
+        </div>
+
+        <!-- 代理设置卡片 -->
+        <div class="tool-card">
+          <h2 class="tool-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 1v6m0 6v6" />
+              <path d="m1 12 6 0m6 0 6 0" />
+            </svg>
+            设置代理端口
+          </h2>
+          <p class="tool-description">
+            配置 Windsurf 使用本地代理服务器，默认端口为 7897。
+          </p>
+          <div class="proxy-input-group">
+            <label for="proxy-port-input" class="input-label">代理端口</label>
+            <input type="number" id="proxy-port-input" class="tool-input" placeholder="7897" value="7897" min="1"
+              max="65535" />
+            <div class="tool-actions">
+              <button class="action-btn primary" id="set-proxy-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                设置代理
+              </button>
+              <button class="action-btn secondary" id="remove-proxy-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+                移除代理
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 禁用 Windsurf 自动更新卡片 -->
+        <div class="tool-card">
+          <h2 class="tool-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <line x1="12" y1="12" x2="12" y2="12" />
+            </svg>
+            禁用 Windsurf 自动更新
+          </h2>
+          <p class="tool-description">
+            阻止 Windsurf 自动更新，避免频繁版本变化。默认已启用，建议保持开启状态。
+          </p>
+          <div class="privacy-status">
+            <div class="status-indicator">
+              <span class="status-text" id="update-status-text">当前状态：读取中...</span>
+              <span class="status-badge" id="update-status-badge">-</span>
+            </div>
+          </div>
+          <div class="tool-actions">
+            <button class="action-btn primary" id="toggle-update-disable-btn" style="width: 100%;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+              切换更新禁用状态
+            </button>
+          </div>
+        </div>
+
+        <!-- 邮箱隐私设置卡片 -->
+        <div class="tool-card" style="display: none;">
+          <h2 class="tool-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            邮箱隐私保护
+          </h2>
+          <p class="tool-description">
+            开启后，所有邮箱地址将隐藏后缀部分，保护您的隐私。
+          </p>
+          <div class="privacy-status">
+            <div class="status-indicator">
+              <span class="status-text" id="privacy-status-text">当前状态：已开启</span>
+              <span class="status-badge active" id="privacy-status-badge">已开启</span>
+            </div>
+          </div>
+          <div class="tool-actions">
+            <button class="action-btn primary" id="toggle-privacy-btn" style="width: 100%;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              切换隐私模式
+            </button>
+          </div>
+        </div>
+
+        <!-- 提示信息 -->
+        <div class="tool-notice">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <div class="notice-content">
+            <strong>注意：</strong>修改部分设置后需要<strong>重启 Windsurf</strong> 才能生效。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 关于页面 -->
+    <div id="page-about" class="page-content">
+      <div class="about-card">
+        <!-- 应用图标和标题 -->
+        <div class="about-header">
+          <div class="about-icon">
+            <img src="assets/cursor-shifter-logo.png" alt="Cursor Shifter Logo" width="96" height="96" />
+          </div>
+          <h1 class="about-title">Cursor&Windsurf Shifter</h1>
+          <p class="about-subtitle">Cursor&Windsurf 一键续杯换号助手</p>
+          <span class="about-version" id="app-version">v{{ version }}</span>
+        </div>
+
+        <!-- 项目描述 -->
+        <div class="about-section">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            项目简介
+          </h2>
+          <p class="section-text">轻松一键续杯 Windsurf Pro，支持使用 Pro 会员账号 和 试用会员账号</p>
+        </div>
+
+        <!-- 支持模型 -->
+        <div class="about-section">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            支持模型
+          </h2>
+          <div class="model-tags">
+            <span class="model-tag">Claude 4.5</span>
+            <span class="model-tag">Claude MAX</span>
+            <span class="model-tag">GPT 5.1</span>
+            <span class="model-tag">会员模型</span>
+          </div>
+        </div>
+
+        <!-- 作者信息 -->
+        <div class="about-section">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            作者信息
+          </h2>
+          <div class="author-info">
+            <div class="author-item">
+              <span class="author-label">作者</span>
+              <span class="author-value">上玄</span>
+            </div>
+            <div class="author-item">
+              <span class="author-label">开源地址</span>
+              <span class="author-value">https://github.com/Sxuan-Coder/cursor-shifter</span>
+            </div>
+            <div class="author-item">
+              <span class="author-label">QQ交流群</span>
+              <span class="author-value">1020272201</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 免费使用提示 -->
+        <div class="free-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+          <span>免费使用</span>
+        </div>
+
+        <!-- 声明 -->
+        <div class="about-section disclaimer">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            声明
+          </h2>
+          <ul class="disclaimer-list">
+            <li>本项目仅供学习交流使用，请勿用于商业用途</li>
+            <li>本项目不承担任何法律责任，使用本项目造成的任何后果，由使用者自行承担</li>
+          </ul>
+        </div>
+
+        <!-- 特别鸣谢 -->
+        <div class="about-section thanks">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            特别鸣谢
+          </h2>
+          <p class="section-text">本项目的开发过程中从许多项目中获取了灵感，在此特别感谢。</p>
+        </div>
+
+        <!-- 版本信息和更新检查 -->
+        <div class="version-section">
+          <div class="version-info">
+            <span class="current-version-label">当前版本：</span>
+            <span class="current-version-value" id="current-version">v{{ version }}</span>
+          </div>
+          <button class="check-update-btn" id="check-update-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+              <path d="M16 21h5v-5" />
+            </svg>
+            检查更新
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 使用教程页面 -->
+    <div id="page-tutorial" class="page-content">
+      <div class="about-card">
+        <!-- 应用图标和标题 -->
+        <div class="about-header">
+          <div class="about-icon">
+            <img src="assets/cursor-shifter-logo.png" alt="Cursor Shifter Logo" width="96" height="96" />
+          </div>
+          <h1 class="about-title">使用教程</h1>
+          <p class="about-subtitle">Cursor&Windsurf Shifter 完整使用指南</p>
+        </div>
+
+        <!-- 教程简介 -->
+        <div class="about-section">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            教程说明
+          </h2>
+          <p class="section-text">本教程详细介绍了 Cursor&Windsurf Shifter 的安装、配置和使用方法，帮助您快速上手并充分利用各项功能。</p>
+        </div>
+
+        <!-- 主要功能 -->
+        <div class="about-section">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            主要功能介绍
+          </h2>
+          <ul class="features-list">
+            <li class="feature-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>一键换号 - 快速切换 Cursor&Windsurf 账号</span>
+            </li>
+            <li class="feature-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>账号管理 - 批量管理多个账号</span>
+            </li>
+            <li class="feature-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>配置备份 - 安全备份恢复配置</span>
+            </li>
+            <li class="feature-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>实用工具 - 代理设置、HTTP/2 配置等</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="about-section">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            常见问题
+          </h2>
+          <p class="section-text">如果您在使用过程中遇到问题，请查看在线帮助文档获取详细的解决方案和使用技巧。</p>
+        </div>
+
+        <!-- 打开文档按钮 -->
+        <div class="tutorial-actions">
+          <button class="action-btn primary large" id="open-tutorial-doc-btn" style="width: 100%;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+            打开在线帮助文档
+          </button>
+        </div>
+
+        <!-- 提示信息 -->
+        <div class="about-section disclaimer">
+          <h2 class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            温馨提示
+          </h2>
+          <ul class="disclaimer-list">
+            <li>在线文档会持续更新，建议收藏以便随时查阅</li>
+            <li>如遇到问题可通过文档中的联系方式获取帮助</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 自定义弹窗 -->
+  <div id="custom-dialog" class="dialog-overlay">
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <h3 class="dialog-title" id="dialog-title">提示</h3>
+        <button class="dialog-close" id="dialog-close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <div class="dialog-icon" id="dialog-icon"></div>
+        <p class="dialog-message" id="dialog-message">这是一条消息</p>
+        <input type="text" class="dialog-input" id="dialog-input" placeholder="请输入..." style="display: none;" />
+        <!-- 表单输入区域 -->
+        <div class="dialog-form" id="dialog-form" style="display: none;">
+          <div class="form-group">
+            <label for="dialog-email" class="form-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m2 7 10 7 10-7" />
+              </svg>
+              邮箱
+            </label>
+            <input type="email" id="dialog-email" class="form-input" placeholder="请输入邮箱地址" />
+          </div>
+          <div class="form-group">
+            <label for="dialog-password" class="form-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              密码
+            </label>
+            <input type="password" id="dialog-password" class="form-input" placeholder="请输入密码" />
+          </div>
+          <div class="form-group">
+            <label for="dialog-apikey" class="form-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              API Key (可选)
+            </label>
+            <input type="text" id="dialog-apikey" class="form-input" placeholder="请输入 API Key (可选)" />
+          </div>
+          <div class="form-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>如果有 API Key, 可以在此输入, 否则留空</span>
+          </div>
+          <div class="form-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>添加的账号将保存在本地, 请确保信息准确</span>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer" id="dialog-footer">
+        <button class="dialog-btn dialog-btn-cancel" id="dialog-cancel">取消</button>
+        <button class="dialog-btn dialog-btn-confirm" id="dialog-confirm">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 账号详情弹窗 -->
+  <div id="account-detail-dialog" class="dialog-overlay">
+    <div class="dialog-container detail-dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-header-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <h3 class="dialog-title">账号详细信息</h3>
+        <button class="dialog-close" id="detail-dialog-close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-body detail-dialog-body">
+        <!-- 基本信息 -->
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>基本信息</span>
+          </div>
+          <div class="detail-items">
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m2 7 10 7 10-7" />
+                </svg>
+              </div>
+              <span class="detail-item-label">邮箱</span>
+              <span class="detail-item-value" id="detail-email">-</span>
+            </div>
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+              <span class="detail-item-label">密码</span>
+              <span class="detail-item-value" id="detail-password">-</span>
+            </div>
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="10" y1="2" x2="10" y2="6" />
+                  <line x1="14" y1="2" x2="14" y2="6" />
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+              <span class="detail-item-label">账号ID</span>
+              <span class="detail-item-value monospace" id="detail-user-id">-</span>
+            </div>
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <span class="detail-item-label">创建时间</span>
+              <span class="detail-item-value" id="detail-created-at">-</span>
+            </div>
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <span class="detail-item-label">到期时间</span>
+              <span class="detail-item-value" id="detail-expiry">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 订阅信息 -->
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <span>订阅信息</span>
+          </div>
+          <div class="detail-items">
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+              </div>
+              <span class="detail-item-label">订阅类型</span>
+              <span class="detail-item-value" id="detail-plan-type">-</span>
+            </div>
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <span class="detail-item-label">剩余积分</span>
+              <span class="detail-item-value" id="detail-credits">-</span>
+            </div>
+            <div class="detail-item-row">
+              <div class="detail-item-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23" />
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
+              <span class="detail-item-label">使用率</span>
+              <span class="detail-item-value" id="detail-usage">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- API Key -->
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <span>API Key</span>
+          </div>
+          <div class="detail-api-key">
+            <code id="detail-api-key">-</code>
+            <button class="copy-api-key-btn" id="copy-detail-api-key" title="复制 API Key">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="dialog-btn dialog-btn-confirm" id="detail-dialog-close-btn">关闭</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

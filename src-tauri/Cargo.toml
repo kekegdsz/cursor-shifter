@@ -1,0 +1,52 @@
+[package]
+name = "cursor-windsurf-shifter"
+version = "0.5.1"
+description = "Cursor & Windsurf 账号快速切换工具 - 方便管理和切换多个 AI 编辑器账号"
+authors = ["SXuan"]
+edition = "2021"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "cursor_shifter_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# 一键换号功能依赖
+rusqlite = { version = "0.32", features = ["bundled"] }  # SQLite 数据库（内置版本，用于读取 state.vscdb）
+regex = "1"              # 正则表达式
+uuid = { version = "1", features = ["v4"] }  # UUID 生成
+rand = "0.8"             # 随机数生成
+
+# 备份功能依赖
+chrono = { version = "0.4", features = ["clock"] }  # 时间处理（需要 clock 特性支持本地时区）
+sha2 = "0.10"            # SHA256 哈希（用于生成设备ID）
+
+# JWT和HTTP请求依赖
+jsonwebtoken = "9"       # JWT解码
+base64 = "0.22"          # Base64编解码
+reqwest = { version = "0.11", features = ["json"] }  # HTTP客户端
+urlencoding = "2.1"      # URL 编解码（用于解析 SessionToken）
+
+# 文件对话框依赖
+rfd = "0.15"             # 原生文件对话框（异步版本）
+
+# 系统信息依赖
+sysinfo = "0.32"         # 系统信息获取（用于设备信息）
+
+# 自动注册功能依赖
+tokio = { version = "1", features = ["full"] }  # 异步运行时
+headless_chrome = "1"    # 浏览器自动化（CDP协议）
+
