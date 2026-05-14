@@ -231,7 +231,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   // 检查用户之前选择的 IDE，如果是 Windsurf 则自动跳转
   console.log("📍 Step 0: 检查 IDE 配置...");
-  const savedIde = getSelectedIde();
+  const savedIde = window.getSelectedIde();
   console.log(`  - 当前保存的 IDE 配置: ${savedIde}`);
 
   if (savedIde === "windsurf") {
@@ -260,16 +260,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.log("  ✓ 刷新按钮已绑定");
   }
 
-  // 绑定 IDE 切换按钮事件
+  // IDE 切换由 common.js 统一绑定；此处仅同步 Cursor 页的展示状态
   const ideSwitchBtn = document.querySelector("#ide-switch-btn");
   if (ideSwitchBtn) {
-    // 确保 index.html (Cursor 页面) 的 IDE 状态设置为 cursor
     ideSwitchBtn.setAttribute("data-active", "cursor");
-    setSelectedIde("cursor"); // 保存到 localStorage
+    window.setSelectedIde("cursor");
     console.log(`  ✓ IDE 状态已设置为: cursor`);
-
-    ideSwitchBtn.addEventListener("click", handleIdeSwitch);
-    console.log("  ✓ IDE 切换按钮已绑定");
   }
 
   // 绑定一键换号按钮事件
@@ -581,47 +577,6 @@ function switchPage(pageName) {
   }
 }
 
-/**
- * 获取当前选中的 IDE
- * @returns {string} "cursor" 或 "windsurf"，默认为 "cursor"
- */
-function getSelectedIde() {
-  const stored = localStorage.getItem("selectedIde");
-  return stored === "windsurf" ? "windsurf" : "cursor";
-}
-
-/**
- * 保存选中的 IDE
- * @param {string} ide - "cursor" 或 "windsurf"
- */
-function setSelectedIde(ide) {
-  localStorage.setItem("selectedIde", ide);
-  console.log(`✓ IDE 选择已保存: ${ide}`);
-}
-
-/**
- * 处理 IDE 切换
- */
-function handleIdeSwitch() {
-  const ideSwitchBtn = document.querySelector("#ide-switch-btn");
-  const currentActive = ideSwitchBtn.getAttribute("data-active");
-
-  // 切换状态
-  const newActive = currentActive === "cursor" ? "windsurf" : "cursor";
-
-  // 保存到 localStorage
-  setSelectedIde(newActive);
-
-  console.log(`IDE 切换: ${currentActive} -> ${newActive}`);
-
-  // 跳转到对应的 HTML 页面
-  if (newActive === "windsurf") {
-    window.location.href = "/windsurf.html";
-  } else {
-    window.location.href = "/index.html";
-  }
-}
-
 // 刷新使用情况数据
 async function handleRefresh() {
   const refreshBtn = document.querySelector("#refresh-btn");
@@ -910,7 +865,7 @@ function updateAccountDisplayWithTrial(detailInfo) {
   // 根据会员类型确定套餐显示文本
   let subscriptionText = "未知";
   if (membershipType === "free") {
-    subscriptionText = "仅auto/gpt4.1";
+    subscriptionText = "仅auto";
   } else if (membershipType === "pro") {
     subscriptionText = "Pro 专业版";
   } else if (membershipType === "ultra") {
@@ -951,8 +906,8 @@ function updateAccountDisplayWithTrial(detailInfo) {
       // Free 用户
       statusBadge.textContent = "仅auto";
       statusBadge.className = "status-badge free";
-      statusLabel.textContent = "仅auto/gpt4.1";
-      progressLabel.textContent = "无试用期，仅auto/gpt4.1，大概每天两美刀额度";
+      statusLabel.textContent = "仅auto";
+      progressLabel.textContent = "无试用期，仅auto，大概每天两美刀额度";
       progressFill.style.width = "0%";
       progressFill.className = "progress-fill";
     } else if (membershipType === "pro") {
@@ -2629,7 +2584,7 @@ function calculateAccountRemainingTime(account) {
 
   // 根据会员类型显示不同的剩余时间
   if (membershipType === "free") {
-    return '<span class="text-muted">仅auto/gpt4.1</span>';
+    return '<span class="text-muted">仅auto</span>';
   }
 
   // 处理Pro和Ultra专业版特殊情况：没有days_remaining字段

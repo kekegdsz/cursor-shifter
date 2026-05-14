@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Cursor and Windsurf Shifter",
+        "title": "Cursor 续杯助手",
         "width": 900,
         "height": 720,
         "resizable": true,

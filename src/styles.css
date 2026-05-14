@@ -341,6 +341,22 @@ body {
   transform: translateX(100%);
 }
 
+/* 仅 Cursor：隐藏 Windsurf 选项并禁用切换点击（与 AppConfig.enableWindsurfIdeSwitch: false 配合） */
+.ide-switch--cursor-only .ide-option[data-ide="windsurf"] {
+  display: none !important;
+}
+
+.ide-switch--cursor-only .ide-switch-slider {
+  width: calc(100% - 8px);
+  transform: none !important;
+}
+
+.ide-switch--cursor-only .ide-switch-btn {
+  pointer-events: none;
+  cursor: default;
+  min-width: 120px;
+}
+
 /* 刷新按钮 */
 .refresh-btn {
   background: transparent;

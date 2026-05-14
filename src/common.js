@@ -77,11 +77,18 @@ function switchPage(pageName) {
 
 // ==================== IDE 切换相关 ====================
 
+function isWindsurfIdeSwitchEnabled() {
+	return window.AppConfig?.enableWindsurfIdeSwitch !== false;
+}
+
 /**
  * 获取当前选中的 IDE
  * @returns {string} "cursor" 或 "windsurf"，默认为 "cursor"
  */
 function getSelectedIde() {
+	if (!isWindsurfIdeSwitchEnabled()) {
+		return "cursor";
+	}
 	const stored = localStorage.getItem("selectedIde");
 	return stored === "windsurf" ? "windsurf" : "cursor";
 }
@@ -91,8 +98,12 @@ function getSelectedIde() {
  * @param {string} ide - "cursor" 或 "windsurf"
  */
 function setSelectedIde(ide) {
-	localStorage.setItem("selectedIde", ide);
-	console.log(`✓ IDE 选择已保存: ${ide}`);
+	let next = ide;
+	if (!isWindsurfIdeSwitchEnabled() && next === "windsurf") {
+		next = "cursor";
+	}
+	localStorage.setItem("selectedIde", next);
+	console.log(`✓ IDE 选择已保存: ${next}`);
 }
 
 // 将函数暴露到全局作用域，供其他模块使用
@@ -104,10 +115,17 @@ window.setSelectedIde = setSelectedIde;
  */
 function handleIdeSwitch() {
 	const ideSwitchBtn = document.querySelector("#ide-switch-btn");
+	if (!ideSwitchBtn) {
+		return;
+	}
 	const currentActive = ideSwitchBtn.getAttribute("data-active");
 
 	// 切换状态
 	const newActive = currentActive === "cursor" ? "windsurf" : "cursor";
+
+	if (newActive === "windsurf" && !isWindsurfIdeSwitchEnabled()) {
+		return;
+	}
 
 	// 保存到 localStorage
 	setSelectedIde(newActive);
@@ -159,6 +177,13 @@ window.addEventListener("DOMContentLoaded", () => {
 		const savedIde = getSelectedIde();
 		ideSwitchBtn.setAttribute("data-active", savedIde);
 		console.log(`  ✓ IDE 初始化为: ${savedIde}`);
+
+		if (!isWindsurfIdeSwitchEnabled()) {
+			const path = (window.location.pathname || "").toLowerCase();
+			if (!path.includes("windsurf")) {
+				ideSwitchBtn.closest(".ide-switch-container")?.classList.add("ide-switch--cursor-only");
+			}
+		}
 
 		ideSwitchBtn.addEventListener("click", handleIdeSwitch);
 		console.log("  ✓ IDE 切换按钮已绑定");

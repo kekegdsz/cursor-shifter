@@ -14,6 +14,9 @@ const AppConfig = {
 
 	buyURL: "https://pay.ldxp.cn/shop/cursor-shifter",
 
+	// 是否在界面中启用「切换到 Windsurf」；设为 false 时仅保留 Cursor，并阻止进入 windsurf 页面
+	enableWindsurfIdeSwitch: false,
+
 	// 应用信息
 	appName: "Cursor-Shifter",
 	appSubtitle: "Cursor 一键续杯换号助手",
