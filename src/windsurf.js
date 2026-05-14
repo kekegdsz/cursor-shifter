@@ -2483,24 +2483,6 @@ async function handleFileSelect(event) {
 }
 
 /**
- * 购买账号卡密
- */
-async function handleBuyAccount() {
-	try {
-		const buyUrl = "https://pay.ldxp.cn/shop/cursor-shifter";
-		console.log("正在打开购买页面:", buyUrl);
-
-		// 调用后端命令打开浏览器
-		await invoke("open_url", { url: buyUrl });
-
-		console.log("✓ 已在浏览器中打开购买页面");
-	} catch (error) {
-		console.error("打开购买页面失败:", error);
-		await showAlert("打开失败", `无法打开浏览器：${error}`, "error");
-	}
-}
-
-/**
  * 重置 Windsurf 机器码
  */
 async function handleResetWindsurfDevice() {
@@ -2854,13 +2836,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 	if (refreshBtn) {
 		refreshBtn.addEventListener("click", handleWindsurfRefresh);
 		console.log("  ✓ Windsurf 刷新按钮已绑定");
-	}
-
-	// 绑定购买账号卡密按钮事件
-	const buyAccountBtn = document.querySelector("#buy-account-btn");
-	if (buyAccountBtn) {
-		buyAccountBtn.addEventListener("click", handleBuyAccount);
-		console.log("  ✓ Windsurf 购买账号卡密按钮已绑定");
 	}
 
 	// 绑定重置机器码按钮事件

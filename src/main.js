@@ -287,11 +287,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     checkUpdateBtn.addEventListener("click", handleCheckUpdate);
   }
 
-  const buyAccountBtn = document.querySelector("#buy-account-btn");
-  if (buyAccountBtn) {
-    buyAccountBtn.addEventListener("click", handleBuyAccount);
-  }
-
   // 教程页面 - 打开在线文档按钮
   const openTutorialDocBtn = document.querySelector("#open-tutorial-doc-btn");
   if (openTutorialDocBtn) {
@@ -1407,23 +1402,6 @@ async function handleSwitchAccount() {
     } else {
       await showAlert("换号失败", errorMessage, "error");
     }
-  }
-}
-
-// 购买账号卡密功能
-async function handleBuyAccount() {
-  try {
-    const buyUrl = "https://pay.ldxp.cn/shop/cursor-shifter";
-    console.log("正在打开购买页面:", buyUrl);
-
-    // 调用后端命令打开浏览器
-    await invoke("open_url", { url: buyUrl });
-
-    console.log("✓ 已在浏览器中打开购买页面");
-
-  } catch (error) {
-    console.error("打开购买页面失败:", error);
-    await showAlert("打开失败", `无法打开浏览器：${error}`, "error");
   }
 }
 
