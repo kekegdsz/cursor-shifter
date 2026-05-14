@@ -1246,10 +1246,75 @@ async function checkCursorLogin() {
   }
 }
 
+// 使用已解析的 Cursor AccessToken 执行一键换号（「输入 Token」与「续杯接口」共用）
+async function runSwitchAccountWithAccessToken(accessToken, ui = {}) {
+  const { loadingButton, busyText = "换号中...", doneText = "一键换号" } = ui;
+  let originalDisabled = false;
+  try {
+    if (loadingButton) {
+      originalDisabled = loadingButton.disabled;
+      loadingButton.disabled = true;
+      loadingButton.textContent = busyText;
+    }
+
+    const emailPrivacyEnabled = getEmailPrivacySetting();
+    const resultJson = await invoke("switch_account", {
+      accessToken,
+      enableEmailPrivacy: emailPrivacyEnabled
+    });
+
+    const result = JSON.parse(resultJson);
+
+    await showAlert("换号成功", result.message, "success");
+
+    try {
+      let accountInfo;
+      try {
+        accountInfo = await invoke("get_account_info", { accessToken });
+      } catch (err) {
+        console.warn("获取账号信息失败，使用默认值:", err);
+        accountInfo = { email: "unknown@example.com" };
+      }
+
+      const accountData = {
+        email: accountInfo.email || "unknown@example.com",
+        plan: accountInfo.subscription || "free_trial",
+        sign_up_type: "Auth_0",
+        auth_id: "",
+        access_token: accessToken,
+        refresh_token: accessToken,
+        machine_id: result.machine_ids?.machine_id || "",
+        service_machine_id: "",
+        dev_device_id: result.machine_ids?.dev_device_id || "",
+        mac_machine_id: result.machine_ids?.mac_machine_id || "",
+        machine_id_telemetry: "",
+        sqm_id: result.machine_ids?.sqm_id || "",
+        note: ""
+      };
+
+      await invoke("add_account", { data: accountData });
+      console.log("✓ 账号数据已保存到本地（含机器ID）");
+
+      cachedAccountsStorage = await loadLocalAccountsStorage();
+
+    } catch (saveError) {
+      console.error("保存账号数据失败:", saveError);
+    }
+
+    await loadUsageData();
+    return result;
+  } finally {
+    if (loadingButton) {
+      loadingButton.disabled = originalDisabled;
+      loadingButton.textContent = doneText;
+    }
+  }
+}
+
 // 一键换号功能
 async function handleSwitchAccount() {
   const switchBtn = document.querySelector("#switch-account-btn");
-  let originalDisabled = false;
+  const doneLabel = "输入Token一键换号";
 
   try {
     // 首先检查 Cursor 是否已登录
@@ -1305,69 +1370,10 @@ async function handleSwitchAccount() {
       console.log("识别为 AccessToken (JWT)，直接使用");
     }
 
-    // 禁用按钮，防止重复点击
-    if (switchBtn) {
-      originalDisabled = switchBtn.disabled;
-      switchBtn.disabled = true;
-      switchBtn.textContent = "换号中...";
-    }
-
-    // 获取邮箱隐私设置
-    const emailPrivacyEnabled = getEmailPrivacySetting();
-
-    // 调用 Tauri 后端命令执行换号操作
-    const resultJson = await invoke("switch_account", {
-      accessToken: token,
-      enableEmailPrivacy: emailPrivacyEnabled
+    await runSwitchAccountWithAccessToken(token, {
+      loadingButton: switchBtn,
+      doneText: doneLabel,
     });
-
-    // 解析返回结果
-    const result = JSON.parse(resultJson);
-
-    // 显示成功提示
-    await showAlert("换号成功", result.message, "success");
-
-    // 保存账号数据到本地文件（包含机器ID）
-    try {
-      // 先尝试获取账号信息以获取邮箱等详细信息
-      let accountInfo;
-      try {
-        accountInfo = await invoke("get_account_info", { accessToken: token });
-      } catch (err) {
-        console.warn("获取账号信息失败，使用默认值:", err);
-        accountInfo = { email: "unknown@example.com" };
-      }
-
-      // 构造账号数据（包含新生成的机器ID）
-      const accountData = {
-        email: accountInfo.email || "unknown@example.com",
-        plan: accountInfo.subscription || "free_trial",
-        sign_up_type: "Auth_0",
-        auth_id: "",
-        access_token: token,
-        refresh_token: token,
-        machine_id: result.machine_ids?.machine_id || "",
-        service_machine_id: "",
-        dev_device_id: result.machine_ids?.dev_device_id || "",
-        mac_machine_id: result.machine_ids?.mac_machine_id || "",
-        machine_id_telemetry: "",
-        sqm_id: result.machine_ids?.sqm_id || "",
-        note: ""
-      };
-
-      // 保存到本地
-      await invoke("add_account", { data: accountData });
-      console.log("✓ 账号数据已保存到本地（含机器ID）");
-
-      // 更新缓存
-      cachedAccountsStorage = await loadLocalAccountsStorage();
-
-    } catch (saveError) {
-      console.error("保存账号数据失败:", saveError);
-    }
-
-    // 刷新页面数据（现在会使用真实的Token信息）
-    await loadUsageData();
 
   } catch (error) {
     console.error("换号失败:", error);
@@ -1400,12 +1406,6 @@ async function handleSwitchAccount() {
       }
     } else {
       await showAlert("换号失败", errorMessage, "error");
-    }
-  } finally {
-    // 恢复按钮状态
-    if (switchBtn) {
-      switchBtn.disabled = originalDisabled;
-      switchBtn.textContent = "输入Token一键换号";
     }
   }
 }
@@ -1542,37 +1542,73 @@ async function handleResetDevice() {
 }
 
 /**
- * 自动一键换号功能
+ * 一键换号：调用续杯接口获取 AccessToken，并执行与「输入 Token 一键换号」相同的换号流程
  */
 async function handleUnlimitedQuota() {
   const switchBtn = document.querySelector("#unlimited-quota-btn");
+  const doneLabel = "一键换号";
   let originalDisabled = false;
+  let didSetBusy = false;
 
   try {
     const isCursorLoggedIn = await checkCursorLogin();
     if (!isCursorLoggedIn) {
-      console.log("❌ Cursor 未登录，自动换号操作已取消");
+      console.log("❌ Cursor 未登录，一键换号操作已取消");
       return;
     }
 
     if (switchBtn) {
       originalDisabled = switchBtn.disabled;
       switchBtn.disabled = true;
-      switchBtn.textContent = "功能已移除";
+      switchBtn.textContent = "获取Token中...";
+      didSetBusy = true;
     }
 
-    await showAlert(
-      "功能已移除",
-      "开源版已移除云端激活与自动注册相关能力，自动一键换号入口已禁用。",
-      "info"
-    );
+    const token = await invoke("fetch_csk_card_renew_token");
+    const trimmed = String(token).trim();
+    if (!trimmed) {
+      await showAlert("获取失败", "续杯接口未返回有效 Token", "error");
+      return;
+    }
+
+    await runSwitchAccountWithAccessToken(trimmed, {
+      loadingButton: switchBtn,
+      busyText: "换号中...",
+      doneText: doneLabel,
+    });
+    didSetBusy = false;
   } catch (error) {
-    console.error("处理自动换号入口失败:", error);
-    await showAlert("操作失败", error.toString(), "error");
+    console.error("一键换号（续杯接口）失败:", error);
+
+    let errorMessage = error.toString();
+    if (typeof error === "string") {
+      errorMessage = error;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
+    if (errorMessage.includes("权限不足") || errorMessage.includes("拒绝访问") || errorMessage.includes("Access is denied")) {
+      errorMessage = "❌ 权限不足\n\n" + errorMessage;
+
+      const retry = await showConfirm(
+        "权限问题",
+        errorMessage + "\n\n是否尝试以管理员身份重启程序？"
+      );
+
+      if (retry) {
+        await showAlert(
+          "操作指南",
+          "请按以下步骤操作：\n\n1. 关闭当前程序\n2. 右键点击程序图标\n3. 选择「以管理员身份运行」\n4. 重新尝试换号操作",
+          "info"
+        );
+      }
+    } else {
+      await showAlert("一键换号失败", errorMessage, "error");
+    }
   } finally {
-    if (switchBtn) {
+    if (didSetBusy && switchBtn) {
       switchBtn.disabled = originalDisabled;
-      switchBtn.textContent = "自动一键换号";
+      switchBtn.textContent = doneLabel;
     }
   }
 }
@@ -4396,7 +4432,7 @@ async function handleSeamlessApply() {
   // 模式描述
   const modeDesc = mode === "local"
     ? "本地模式：将从「账号管理」中的账号列表自动切换"
-    : "激活码模式：将复用「自动一键换号」功能从后端获取账号";
+    : "激活码模式：将复用「一键换号」从续杯接口获取账号";
 
   const confirmed = await showConfirm(
     "应用补丁",

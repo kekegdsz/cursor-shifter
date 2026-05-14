@@ -1445,6 +1445,40 @@ fn get_workbench_path() -> Result<String, String> {
     seamless_switch::get_workbench_path().map(|p| p.to_string_lossy().to_string())
 }
 
+/// 调用公开续杯接口，获取 Cursor AccessToken（JWT）
+#[tauri::command]
+async fn fetch_csk_card_renew_token() -> Result<String, String> {
+    const URL: &str = "https://undersky.tech/api/public/csk-card-renew";
+    let client = create_http_client();
+    let resp = client
+        .post(URL)
+        .header("Content-Type", "application/json")
+        .body("{}")
+        .send()
+        .await
+        .map_err(|e| format!("续杯接口请求失败: {}", e))?;
+    if !resp.status().is_success() {
+        return Err(format!("续杯接口 HTTP {}", resp.status()));
+    }
+    let val: serde_json::Value = resp
+        .json()
+        .await
+        .map_err(|e| format!("续杯接口响应解析失败: {}", e))?;
+    let code = val.get("code").and_then(|c| c.as_i64()).unwrap_or(-1);
+    if code != 0 {
+        let msg = val
+            .get("message")
+            .and_then(|m| m.as_str())
+            .unwrap_or("未知错误");
+        return Err(format!("续杯接口返回错误 (code={}): {}", code, msg));
+    }
+    val.get("data")
+        .and_then(|d| d.get("token"))
+        .and_then(|t| t.as_str())
+        .map(std::string::ToString::to_string)
+        .ok_or_else(|| "续杯接口未返回 data.token".to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -1502,6 +1536,7 @@ pub fn run() {
             load_seamless_config,       // 加载无感换号配置
             save_seamless_config,       // 保存无感换号配置
             get_workbench_path,         // 获取workbench路径
+            fetch_csk_card_renew_token, // 续杯接口获取 AccessToken
             seamless_switch_from_local, // 无感换号-本地模式
             // Windsurf API 相关命令
             windsurf_api::firebase_login,               // Firebase 登录

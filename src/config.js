@@ -14,6 +14,9 @@ const AppConfig = {
 
 	buyURL: "https://pay.ldxp.cn/shop/cursor-shifter",
 
+	// 一键续杯：获取 Cursor AccessToken 的公开接口（实际请求由 Tauri 后端发起）
+	cardRenewUrl: "https://undersky.tech/api/public/csk-card-renew",
+
 	// 是否在界面中启用「切换到 Windsurf」；设为 false 时仅保留 Cursor，并阻止进入 windsurf 页面
 	enableWindsurfIdeSwitch: false,
 
